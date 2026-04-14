@@ -2,6 +2,8 @@ import streamlit as st
 import google.generativeai as genai
 import PIL.Image
 import io
+from config import get_api_key
+from datetime import datetime
 
 # ==============================================
 # PAGE CONFIGURATION
@@ -20,13 +22,10 @@ st.subheader("AI-Powered Medical Image Analysis for Rural Ethiopia")
 st.markdown("---")
 
 # ==============================================
-# SIDEBAR FOR API KEY
+# SIDEBAR FOR INFO (NO API KEY INPUT NEEDED)
 # ==============================================
 with st.sidebar:
-    st.header("🔐 Configuration")
-    st.markdown("Get your free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)")
-    api_key = st.text_input("Enter your Gemini API Key:", type="password")
-    
+    st.header("🏥 VitalLogic AI")
     st.markdown("---")
     st.markdown("### 📋 About")
     st.markdown("""
@@ -37,21 +36,22 @@ with st.sidebar:
     """)
     
     st.markdown("---")
+    st.markdown("✅ **Status:** AI Engine Ready")
+    st.markdown("🔒 **Secure:** API key stored safely")
+    
+    st.markdown("---")
     st.markdown("⚠️ **Disclaimer:** This is an AI assistant. Always consult a medical professional.")
 
 # ==============================================
-# MAIN CONTENT
+# CONFIGURE GEMINI (USING SECURE API KEY FROM .ENV)
 # ==============================================
-if not api_key:
-    st.info("🔑 Please enter your Gemini API key in the sidebar to continue. Get one free at makersuite.google.com")
-    st.stop()
-
-# Configure Gemini
 try:
+    api_key = get_api_key()
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel('models/gemini-flash-latest')
 except Exception as e:
     st.error(f"Error configuring API: {str(e)}")
+    st.info("💡 Please make sure your .env file contains a valid GEMINI_API_KEY")
     st.stop()
 
 # ==============================================
@@ -158,7 +158,6 @@ Keep your answer SIMPLE and CLEAR. A nurse with basic training must understand i
                 st.markdown('</div>', unsafe_allow_html=True)
             
             # Add a timestamp
-            from datetime import datetime
             st.caption(f"Analysis completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             
         except Exception as e:

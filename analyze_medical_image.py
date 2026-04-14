@@ -1,13 +1,13 @@
 import google.generativeai as genai
 import PIL.Image
 import os
+from config import get_api_key
 
 # ==============================================
-# STEP 1: Enter your API key here
+# STEP 1: Get API key from .env (SECURE)
 # ==============================================
-# Replace "YOUR_API_KEY_HERE" with the key you copied from Google AI Studio
-# Example: genai.configure(api_key="AIzaSyD1234567890abcdef")
-genai.configure(api_key="AIzaSyCZc3iDDsw94yyz34Ol-7sjClfnCbH3i3A")
+api_key = get_api_key()
+genai.configure(api_key=api_key)
 
 # ==============================================
 # STEP 2: Load the Gemini model
